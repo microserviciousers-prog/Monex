@@ -1,0 +1,58 @@
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### Java ###
+*.class
+*.log
+*.ctxt
+*.jar
+*.war
+*.ear
+
+### IDEs ###
+.idea/
+*.iml
+
+.vscode/
+.settings/
+.project
+.classpath
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+logs/
+*.log
+
+### Spring Boot ###
+spring.log
+
+### Docker ###
+docker-compose.override.yml
+
+### Environment ###
+.env
+.env.*
+
+### Build ###
+dependency-reduced-pom.xml
+
+### Temporary ###
+tmp/
+temp/
+
+### IntelliJ ###
+out/
+
+### Eclipse ###
+bin/
+
+### NetBeans ###
+nbproject/private/
+
+### Mac ###
+.AppleDouble
+.LSOverride
