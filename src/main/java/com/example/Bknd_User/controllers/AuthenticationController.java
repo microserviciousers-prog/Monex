@@ -95,7 +95,8 @@ public class AuthenticationController {
             @Parameter(hidden = true)
             @RequestHeader("Authorization") String authHeader) {
 
-        User user = jwtService.comprobarToken(authHeader);
+        String token = authHeader.replace("Bearer ", "");
+        User user = jwtService.comprobarToken(token);
 
         UserDTO response = UserDTO.builder()
                 .id(user.getId())
