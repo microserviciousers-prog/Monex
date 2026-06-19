@@ -20,9 +20,12 @@ import com.example.Bknd_User.dto.LoginResponse;
 import com.example.Bknd_User.dto.GoogleLoginRequest;
 import com.example.Bknd_User.dto.RegisterRequest;
 import com.example.Bknd_User.dto.UserDTO;
+import com.example.Bknd_User.dto.PasswordRecoveryRequest;
+import com.example.Bknd_User.dto.VerifyCodeRequest;
 import com.example.Bknd_User.entity.User;
 import com.example.Bknd_User.service.UserServices;
 import com.example.Bknd_User.service.JwtService;
+import com.example.Bknd_User.service.PasswordRecoveryService;
 
 @Tag(name = "Autenticación", description = "Endpoints para autenticación y gestión de tokens JWT")
 @RestController
@@ -34,6 +37,9 @@ public class AuthenticationController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PasswordRecoveryService passwordRecoveryService;
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
@@ -99,5 +105,41 @@ public class AuthenticationController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Enviar código de recuperación", description = "Envía un código de verificación al correo registrado del usuario.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Código enviado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "El correo no está registrado")
+    })
+    @PostMapping("recuperar/enviar-codigo")
+    public ResponseEntity<?> enviarCodigoRecuperacion(@RequestBody @Valid PasswordRecoveryRequest request) {
+        try {
+            passwordRecoveryService.enviarCodigoRecuperacion(request.getEmail());
+            return ResponseEntity.ok(new MessageResponse("Se envió un código de verificación a tu correo"));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al enviar el código de recuperación");
+        }
+    }
+
+    @Operation(summary = "Verificar código de recuperación", description = "Verifica el código de recuperación enviado al correo del usuario.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Código verificado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Código inválido, expirado o correo no registrado")
+    })
+    @PostMapping("recuperar/verificar-codigo")
+    public ResponseEntity<?> verificarCodigoRecuperacion(@RequestBody @Valid VerifyCodeRequest request) {
+        try {
+            passwordRecoveryService.verificarCodigo(request.getEmail(), request.getCodigo());
+            return ResponseEntity.ok(new MessageResponse("Código verificado correctamente"));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al verificar el código");
+        }
     }
 }
