@@ -22,6 +22,7 @@ import com.example.Bknd_User.dto.RegisterRequest;
 import com.example.Bknd_User.dto.UserDTO;
 import com.example.Bknd_User.dto.PasswordRecoveryRequest;
 import com.example.Bknd_User.dto.VerifyCodeRequest;
+import com.example.Bknd_User.dto.MessageResponse;
 import com.example.Bknd_User.entity.User;
 import com.example.Bknd_User.service.UserServices;
 import com.example.Bknd_User.service.JwtService;
