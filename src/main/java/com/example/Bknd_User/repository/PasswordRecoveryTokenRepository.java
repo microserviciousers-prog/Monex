@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface PasswordRecoveryTokenRepository extends JpaRepository<PasswordRecoveryToken, Long> {
     Optional<PasswordRecoveryToken> findByUserAndTokenAndUsedFalse(User user, String token);
-    Optional<PasswordRecoveryToken> findByUserAndTokenAndUsedTrue(User user, String token);
 }
