@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.Bknd_User.dto.CreditCardConfigRequest;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.Bknd_User.dto.CreditCardConfigResponse;
 import com.example.Bknd_User.dto.UserUpdateRequest;
 import com.example.Bknd_User.entity.CreditCardConfig;

@@ -13,4 +13,7 @@ public interface PasswordRecoveryTokenRepository extends JpaRepository<PasswordR
 
     // Borra todos los tokens asociados a un usuario (usado antes de eliminar el usuario)
     void deleteByUser(User user);
+    
+    // Borra tokens por user id (método más directo y seguro desde el servicio)
+    void deleteByUserId(Long userId);
 }
