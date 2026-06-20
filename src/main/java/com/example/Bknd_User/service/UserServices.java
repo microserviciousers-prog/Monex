@@ -213,8 +213,11 @@ public class UserServices {
         creditCardConfigRepository.findByUserId(id)
                 .ifPresent(creditCardConfigRepository::delete);
 
-        // Eliminar tokens de recuperación por user id (consulta transaccional segura)
-        passwordRecoveryTokenRepository.deleteByUserId(id);
+        // Eliminar tokens de recuperación asociados (esta transacción es activa en eliminarUsuario)
+        java.util.List<com.example.Bknd_User.entity.PasswordRecoveryToken> tokens = passwordRecoveryTokenRepository.findByUserId(id);
+        if (!tokens.isEmpty()) {
+            passwordRecoveryTokenRepository.deleteAll(tokens);
+        }
 
         // Finalmente eliminar el usuario
         userRepository.deleteById(id);
