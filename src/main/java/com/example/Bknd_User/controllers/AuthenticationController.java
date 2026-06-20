@@ -151,7 +151,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "200", description = "Contraseña cambiada correctamente"),
             @ApiResponse(responseCode = "400", description = "Código inválido, expirado o correo no registrado")
     })
-    @PostMapping("recuperar/cambiar-contraseña")
+    @PostMapping("recuperar/cambiar-contrasena")
     public ResponseEntity<?> cambiarContraseña(@RequestBody @Valid ResetPasswordRequest request) {
         try {
             passwordRecoveryService.cambiarContraseña(request.getEmail(), request.getCodigo(), request.getNewPassword());
