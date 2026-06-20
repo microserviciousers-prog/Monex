@@ -45,6 +45,9 @@ public class UserServices {
     private CreditCardConfigRepository creditCardConfigRepository;
     
     @Autowired
+    private com.example.Bknd_User.repository.PasswordRecoveryTokenRepository passwordRecoveryTokenRepository;
+    
+    @Autowired
     private JwtService jwtService;
     
     @Autowired
@@ -202,12 +205,20 @@ public class UserServices {
         if (!userRepository.existsById(id)) {
             return false;
         }
-
+        // Primero eliminar datos en microservicios externos
         eliminarDatosExternosDelUsuario(id, authHeader);
 
+        // Eliminar configuración de tarjeta si existe
         creditCardConfigRepository.findByUserId(id)
                 .ifPresent(creditCardConfigRepository::delete);
 
+        // Eliminar tokens de recuperación asociados para evitar violaciones de FK
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            passwordRecoveryTokenRepository.deleteByUser(user);
+        }
+
+        // Finalmente eliminar el usuario
         userRepository.deleteById(id);
         return true;
     }

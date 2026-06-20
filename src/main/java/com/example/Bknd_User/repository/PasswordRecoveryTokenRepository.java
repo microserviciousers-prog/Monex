@@ -10,4 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PasswordRecoveryTokenRepository extends JpaRepository<PasswordRecoveryToken, Long> {
     Optional<PasswordRecoveryToken> findByUserAndTokenAndUsedFalse(User user, String token);
+
+    // Borra todos los tokens asociados a un usuario (usado antes de eliminar el usuario)
+    void deleteByUser(User user);
 }
