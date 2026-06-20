@@ -22,6 +22,7 @@ import com.example.Bknd_User.dto.RegisterRequest;
 import com.example.Bknd_User.dto.UserDTO;
 import com.example.Bknd_User.dto.PasswordRecoveryRequest;
 import com.example.Bknd_User.dto.VerifyCodeRequest;
+import com.example.Bknd_User.dto.ResetPasswordRequest;
 import com.example.Bknd_User.dto.MessageResponse;
 import com.example.Bknd_User.entity.User;
 import com.example.Bknd_User.service.UserServices;
@@ -142,6 +143,24 @@ public class AuthenticationController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al verificar el código");
+        }
+    }
+
+    @Operation(summary = "Cambiar contraseña", description = "Cambia la contraseña del usuario después de verificar el código de recuperación.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contraseña cambiada correctamente"),
+            @ApiResponse(responseCode = "400", description = "Código inválido, expirado o correo no registrado")
+    })
+    @PostMapping("recuperar/cambiar-contraseña")
+    public ResponseEntity<?> cambiarContraseña(@RequestBody @Valid ResetPasswordRequest request) {
+        try {
+            passwordRecoveryService.cambiarContraseña(request.getEmail(), request.getCodigo(), request.getNewPassword());
+            return ResponseEntity.ok(new MessageResponse("Contraseña cambiada correctamente"));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al cambiar la contraseña");
         }
     }
 }

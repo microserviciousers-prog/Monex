@@ -59,6 +59,21 @@ public class PasswordRecoveryService {
         return true;
     }
 
+    public void cambiarContraseña(String email, String codigo, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("El correo no está registrado"));
+
+        PasswordRecoveryToken token = tokenRepository.findByUserAndTokenAndUsedTrue(user, codigo)
+                .orElseThrow(() -> new IllegalArgumentException("Código no verificado o expirado"));
+
+        if (!token.isValid()) {
+            throw new IllegalArgumentException("El código ha expirado");
+        }
+
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
+
     private String generarCodigo() {
         int codigo = 100000 + random.nextInt(900000);
         return String.valueOf(codigo);
