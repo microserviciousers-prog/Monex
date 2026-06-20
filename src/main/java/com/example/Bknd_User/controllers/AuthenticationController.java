@@ -154,7 +154,7 @@ public class AuthenticationController {
     @PostMapping("recuperar/cambiar-contrasena")
     public ResponseEntity<?> cambiarContraseña(@RequestBody @Valid ResetPasswordRequest request) {
         try {
-            passwordRecoveryService.cambiarContraseña(request.getEmail(), request.getCodigo(), request.getNewPassword());
+            passwordRecoveryService.cambiarContraseña(request.getEmail(), request.getNewPassword());
             return ResponseEntity.ok(new MessageResponse("Contraseña cambiada correctamente"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
