@@ -213,11 +213,8 @@ public class UserServices {
         creditCardConfigRepository.findByUserId(id)
                 .ifPresent(creditCardConfigRepository::delete);
 
-        // Eliminar tokens de recuperación asociados para evitar violaciones de FK
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            passwordRecoveryTokenRepository.deleteByUser(user);
-        }
+        // Eliminar tokens de recuperación por user id (consulta transaccional segura)
+        passwordRecoveryTokenRepository.deleteByUserId(id);
 
         // Finalmente eliminar el usuario
         userRepository.deleteById(id);
