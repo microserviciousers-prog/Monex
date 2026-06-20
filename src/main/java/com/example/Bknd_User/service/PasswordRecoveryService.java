@@ -5,6 +5,7 @@ import com.example.Bknd_User.entity.User;
 import com.example.Bknd_User.repository.PasswordRecoveryTokenRepository;
 import com.example.Bknd_User.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ public class PasswordRecoveryService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final int TOKEN_EXPIRATION_MINUTES = 15;
     private static final Random random = new Random();
@@ -63,7 +67,8 @@ public class PasswordRecoveryService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("El correo no está registrado"));
 
-        user.setPassword(newPassword);
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
         userRepository.save(user);
     }
 
