@@ -95,9 +95,8 @@ public class AuthenticationController {
     public ResponseEntity<UserDTO> getCurrentUser(
             @Parameter(hidden = true)
             @RequestHeader("Authorization") String authHeader) {
-
-        String token = authHeader.replace("Bearer ", "");
-        User user = jwtService.comprobarToken(token);
+        // Pasar la cabecera completa al servicio JWT (espera el prefijo "Bearer ")
+        User user = jwtService.comprobarToken(authHeader);
 
         UserDTO response = UserDTO.builder()
                 .id(user.getId())
