@@ -2,6 +2,7 @@ package com.example.Bknd_User.controllers;
 
 import com.example.Bknd_User.entity.User;
 import com.example.Bknd_User.service.JwtService;
+import com.example.Bknd_User.service.PasswordRecoveryService;
 import com.example.Bknd_User.service.UserServices;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -32,12 +34,18 @@ class AuthenticationControllerTest {
         @Mock
         private JwtService jwtService;
 
+        @Mock
+        private PasswordRecoveryService passwordRecoveryService;
+
         @InjectMocks
         private AuthenticationController authenticationController;
 
         @BeforeEach
         void setUp() {
                 MockitoAnnotations.openMocks(this);
+
+                ReflectionTestUtils.setField(authenticationController, "jwtExpiration", 86400000L);
+
                 mockMvc = MockMvcBuilders.standaloneSetup(authenticationController).build();
         }
 
@@ -60,7 +68,7 @@ class AuthenticationControllerTest {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.access_token").value("token-jwt"))
                                 .andExpect(jsonPath("$.token_type").value("Bearer"))
-                                .andExpect(jsonPath("$.expires_in").value(86400000L));
+                                .andExpect(jsonPath("$.expires_in").value(86400000));
         }
 
         @Test
